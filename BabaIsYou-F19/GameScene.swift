@@ -24,6 +24,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     var stopBox : SKSpriteNode!
     var isBox1 : SKSpriteNode!
     var isBox2 : SKSpriteNode!
+    var youWinLabel : SKLabelNode!
+    
+    var touchWallWins : Bool = false
+    var touchFlagWins : Bool = false;
 
     override func didMove(to view: SKView)
     {
@@ -40,26 +44,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate
         self.stopBox = self.childNode(withName: "stopblock") as! SKSpriteNode
         self.isBox1 = self.childNode(withName: "isblock1") as! SKSpriteNode
         self.isBox2 = self.childNode(withName: "isblock2") as! SKSpriteNode
+        self.youWinLabel = self.childNode(withName: "youWin") as! SKLabelNode
+        self.youWinLabel.text = ""
     }
    
     func didBegin(_ contact: SKPhysicsContact)
     {
-        print("Something collided!")
+        //print("Something collided!")
     }
     
     override func update(_ currentTime: TimeInterval)
     {
-        if(self.checkRulesCollision(first: wallBox, second: stopBox))
+        if(self.checkRulesCollision(first: self.wallBox, second: self.stopBox))
         {
-            wall1.physicsBody?.collisionBitMask = 1
-            wall2.physicsBody?.collisionBitMask = 1
-            wall3.physicsBody?.collisionBitMask = 1
-            wall4.physicsBody?.collisionBitMask = 1
-            player.physicsBody?.collisionBitMask = 9 + 4
+            self.wall1.physicsBody?.collisionBitMask = 1
+            self.wall2.physicsBody?.collisionBitMask = 1
+            self.wall3.physicsBody?.collisionBitMask = 1
+            self.wall4.physicsBody?.collisionBitMask = 1
+            self.player.physicsBody?.collisionBitMask = 9 + 4
         }
         else
         {
-            player.physicsBody?.collisionBitMask = 9
+            self.player.physicsBody?.collisionBitMask = 9
+        }
+        
+        self.touchWallWins = self.checkRulesCollision(first: self.wallBox, second: self.winBox)
+        self.touchFlagWins = self.checkRulesCollision(first: self.flagBox, second: self.winBox)
+        
+        if(self.touchWallWins && (self.player.frame.intersects(self.wall1.frame) || self.player.frame.intersects(self.wall2.frame) || self.player.frame.intersects(self.wall3.frame) || self.player.frame.intersects(self.wall4.frame)))
+        {
+            // WIN
+            self.youWinLabel.text = "CONGRATULATIONS!"
+        }
+        
+        if(self.touchFlagWins && self.player.frame.intersects(self.flag.frame))
+        {
+            // WIN
+            self.youWinLabel.text = "CONGRATULATIONS!"
         }
     }
     
