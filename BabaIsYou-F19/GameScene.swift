@@ -2,7 +2,7 @@
 //  GameScene.swift
 //  BabaIsYou-F19
 //
-//  Created by Parrot on 2019-10-17.
+//  Created by CJB.
 //  Copyright © 2019 Parrot. All rights reserved.
 //
 
@@ -27,7 +27,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate
     var youWinLabel : SKLabelNode!
     
     var touchWallWins : Bool = false
-    var touchFlagWins : Bool = false;
+    var touchFlagWins : Bool = false
+    
+    var stopInWalls : Bool = false
+    var stopInFlag : Bool = false
 
     override func didMove(to view: SKView)
     {
@@ -61,12 +64,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate
             self.wall2.physicsBody?.collisionBitMask = 1
             self.wall3.physicsBody?.collisionBitMask = 1
             self.wall4.physicsBody?.collisionBitMask = 1
-            self.player.physicsBody?.collisionBitMask = 9 + 4
+            self.stopInWalls = true;
         }
         else
         {
-            self.player.physicsBody?.collisionBitMask = 9
+            self.stopInWalls = false;
         }
+        
+        if(self.checkRulesCollision(first: self.flagBox, second: self.stopBox))
+        {
+            self.flag.physicsBody?.collisionBitMask = 1
+            self.stopInFlag = true;
+        }
+        else
+        {
+            self.stopInFlag = false;
+        }
+        
+        self.player.physicsBody?.collisionBitMask = 9
+        if(self.stopInWalls) { self.player.physicsBody?.collisionBitMask = 9 + 4 }
+        if(self.stopInFlag) { self.player.physicsBody?.collisionBitMask = 9 + 16 }
         
         self.touchWallWins = self.checkRulesCollision(first: self.wallBox, second: self.winBox)
         self.touchFlagWins = self.checkRulesCollision(first: self.flagBox, second: self.winBox)

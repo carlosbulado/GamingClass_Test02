@@ -2,7 +2,7 @@
 //  GameViewController.swift
 //  BabaIsYou-F19
 //
-//  Created by Parrot on 2019-10-17.
+//  Created by CJB.
 //  Copyright © 2019 Parrot. All rights reserved.
 //
 
